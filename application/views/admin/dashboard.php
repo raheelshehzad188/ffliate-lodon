@@ -26,6 +26,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="<?php echo base_url('admin/settings'); ?>">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="<?php echo base_url('admin/change_password'); ?>">
                         <i class="fas fa-key"></i> Change Password
                     </a>

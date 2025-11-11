@@ -5,7 +5,7 @@ class Home extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Click_model');
+        $this->load->model(['Click_model', 'Settings_model']);
         
         // Track affiliate click if affiliate ID in URL
         $affiliate_id = $this->input->get('aff');
@@ -16,7 +16,14 @@ class Home extends CI_Controller {
     }
 
     public function index() {
-        $this->load->view('home/index');
+        // Load all settings
+        $settings = $this->Settings_model->get_all();
+        
+        $data = [
+            'settings' => $settings
+        ];
+        
+        $this->load->view('home/index', $data);
     }
 }
 

@@ -5,7 +5,7 @@ class Admin extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(['Admin_model', 'Affiliate_model', 'Lead_model', 'Commission_model', 'Click_model']);
+        $this->load->model(['Admin_model', 'Affiliate_model', 'Lead_model', 'Commission_model', 'Click_model', 'Settings_model']);
         
         // Don't check authentication for login and logout methods
         $current_method = $this->uri->segment(2);
@@ -20,6 +20,7 @@ class Admin extends CI_Controller {
 
     // Dashboard
     public function dashboard() {
+        $this->Commission_model->process_commissions_by_lead(2, 500);
         $from_date = $this->input->get('from') ?: date('Y-m-01');
         $to_date = $this->input->get('to') ?: date('Y-m-t');
         
@@ -341,6 +342,47 @@ class Admin extends CI_Controller {
         }
         
         $this->load->view('admin/change_password');
+    }
+
+    // Settings
+    public function settings() {
+        $tab = $this->input->get('tab') ?: 'general';
+        
+        // Check if settings table exists
+        $table_exists = $this->db->table_exists('settings');
+        
+        if ($this->input->post()) {
+            if (!$table_exists) {
+                $this->session->set_flashdata('error', 'Settings table does not exist. Please run the create_settings_table.php script first.');
+                redirect('admin/settings?tab=' . $tab);
+                return;
+            }
+            
+            $settings_data = $this->input->post();
+            
+            // Remove submit button from data
+            unset($settings_data['submit']);
+            
+            // Update settings
+            if ($this->Settings_model->update_batch($settings_data)) {
+                $this->session->set_flashdata('success', 'Settings updated successfully!');
+            } else {
+                $this->session->set_flashdata('error', 'Failed to update settings');
+            }
+            
+            redirect('admin/settings?tab=' . $tab);
+        }
+        
+        // Get all settings
+        $settings = $this->Settings_model->get_all();
+        
+        $data = [
+            'settings' => $settings,
+            'active_tab' => $tab,
+            'table_exists' => $table_exists
+        ];
+        
+        $this->load->view('admin/settings', $data);
     }
 }
 
