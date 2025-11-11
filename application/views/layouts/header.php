@@ -1,9 +1,28 @@
+<?php
+// Load settings if not already loaded
+if (!isset($settings)) {
+    $settings = [];
+    // Try to load settings model safely
+    if (file_exists(APPPATH . 'models/Settings_model.php')) {
+        $CI =& get_instance();
+        if (!isset($CI->Settings_model)) {
+            $CI->load->model('Settings_model');
+        }
+        if (isset($CI->Settings_model) && is_object($CI->Settings_model)) {
+            $settings = $CI->Settings_model->get_all();
+            if (!is_array($settings)) {
+                $settings = [];
+            }
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($title) ? $title : 'Affiliate System'; ?></title>
+    <title><?php echo isset($title) ? $title : (isset($settings['site_name']) ? $settings['site_name'] : 'Affiliate System'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -24,6 +43,13 @@
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
         }
         .btn-primary {
             background-color: var(--primary-color);
@@ -103,7 +129,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="<?php echo base_url(); ?>">
-                <i class="fas fa-handshake"></i> Affiliate System
+                <?php if (isset($settings['site_logo']) && !empty($settings['site_logo']) && $settings['site_logo'] != '#'): ?>
+                    <img src="<?php echo htmlspecialchars($settings['site_logo']); ?>" alt="<?php echo isset($settings['site_name']) ? htmlspecialchars($settings['site_name']) : 'Logo'; ?>" class="navbar-logo">
+                <?php endif; ?>
+                <span><?php echo isset($settings['site_name']) ? htmlspecialchars($settings['site_name']) : '<i class="fas fa-handshake"></i> Affiliate System'; ?></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

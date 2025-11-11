@@ -130,10 +130,24 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
+                                        <label class="form-label">Site Logo URL</label>
+                                        <input type="url" name="site_logo" class="form-control" 
+                                               value="<?php echo isset($settings['site_logo']) ? htmlspecialchars($settings['site_logo']) : ''; ?>" 
+                                               placeholder="https://example.com/logo.png">
+                                        <small class="form-text text-muted">Logo will appear in navbar. Leave empty to use text only.</small>
+                                        <?php if (isset($settings['site_logo']) && !empty($settings['site_logo']) && $settings['site_logo'] != '#'): ?>
+                                        <div class="mt-2">
+                                            <img src="<?php echo htmlspecialchars($settings['site_logo']); ?>" alt="Logo Preview" style="max-height: 50px; max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="col-md-6">
                                         <label class="form-label">Site Email</label>
                                         <input type="email" name="site_email" class="form-control" 
                                                value="<?php echo isset($settings['site_email']) ? htmlspecialchars($settings['site_email']) : ''; ?>" required>
                                     </div>
+                                </div>
+                                <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Site Phone</label>
                                         <input type="text" name="site_phone" class="form-control" 

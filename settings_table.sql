@@ -20,6 +20,7 @@ INSERT INTO `settings` (`setting_key`, `setting_value`, `category`, `description
 -- General Settings
 ('site_name', 'London Aesthetics UK', 'general', 'Site Name', NOW(), NOW()),
 ('site_tagline', 'Affiliate Program', 'general', 'Site Tagline', NOW(), NOW()),
+('site_logo', 'https://affiliates.londonaesthetics.com.pk/wp-content/uploads/2025/06/Logo-scaled-1.png', 'general', 'Site Logo URL', NOW(), NOW()),
 ('site_email', 'info@londonaesthetics.com', 'general', 'Site Email', NOW(), NOW()),
 ('site_phone', '(+44) 20 1234 5678', 'general', 'Site Phone', NOW(), NOW()),
 
