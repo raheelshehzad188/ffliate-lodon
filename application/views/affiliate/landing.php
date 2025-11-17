@@ -79,6 +79,12 @@
             <p class="affiliate-bio"><?php echo nl2br(htmlspecialchars($affiliate->bio)); ?></p>
         <?php endif; ?>
         
+        <?php if (isset($discount_percent) && $discount_percent !== null): ?>
+        <div class="alert alert-success" style="max-width: 500px; margin: 20px auto; font-size: 1.2rem; text-align: center;">
+            <i class="fas fa-tag"></i> <strong>Special Offer: <?php echo number_format($discount_percent, 1); ?>% Discount!</strong>
+        </div>
+        <?php endif; ?>
+        
         <div>
             <span class="stats-badge">
                 <i class="fas fa-check-circle"></i> <?php echo $stats['confirmed_leads']; ?> Confirmed Leads

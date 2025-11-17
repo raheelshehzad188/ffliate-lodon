@@ -359,6 +359,24 @@
                                         <small class="form-text text-muted">Minimum amount required for payout</small>
                                     </div>
                                 </div>
+                                <hr class="my-4">
+                                <h6 class="mb-3"><i class="fas fa-tag"></i> Discount Settings</h6>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Minimum Discount %</label>
+                                        <input type="number" name="discount_min" class="form-control" 
+                                               value="<?php echo isset($settings['discount_min']) ? htmlspecialchars($settings['discount_min']) : '0'; ?>" 
+                                               min="0" max="100" step="0.1">
+                                        <small class="form-text text-muted">Minimum discount percentage affiliates can offer</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Maximum Discount %</label>
+                                        <input type="number" name="discount_max" class="form-control" 
+                                               value="<?php echo isset($settings['discount_max']) ? htmlspecialchars($settings['discount_max']) : '50'; ?>" 
+                                               min="0" max="100" step="0.1">
+                                        <small class="form-text text-muted">Maximum discount percentage affiliates can offer</small>
+                                    </div>
+                                </div>
                                 <button type="submit" name="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i> Save Commission Settings
                                 </button>

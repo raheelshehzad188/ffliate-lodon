@@ -85,6 +85,25 @@
                             </div>
                         </div>
                         
+                        <hr class="my-4">
+                        <h6 class="mb-3"><i class="fas fa-tag"></i> Discount Limit Settings</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Minimum Discount % (Optional)</label>
+                                <input type="number" name="discount_min" class="form-control" 
+                                       value="<?php echo isset($affiliate->discount_min) && $affiliate->discount_min !== null ? htmlspecialchars($affiliate->discount_min) : ''; ?>" 
+                                       min="0" max="100" step="0.1" placeholder="Leave empty to use global setting">
+                                <small class="form-text text-muted">Set individual limit for this affiliate. Leave empty to use global setting from Settings → Commission tab.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Maximum Discount % (Optional)</label>
+                                <input type="number" name="discount_max" class="form-control" 
+                                       value="<?php echo isset($affiliate->discount_max) && $affiliate->discount_max !== null ? htmlspecialchars($affiliate->discount_max) : ''; ?>" 
+                                       min="0" max="100" step="0.1" placeholder="Leave empty to use global setting">
+                                <small class="form-text text-muted">Set individual limit for this affiliate. Leave empty to use global setting from Settings → Commission tab.</small>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Profile Picture</label>

@@ -5,7 +5,7 @@ class Affiliate extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(['Affiliate_model', 'Lead_model', 'Commission_model', 'Click_model']);
+        $this->load->model(['Affiliate_model', 'Lead_model', 'Commission_model', 'Click_model', 'Settings_model']);
         $this->load->library('session');
         
         // Don't check auth for landing page
@@ -37,6 +37,23 @@ class Affiliate extends CI_Controller {
         // Set cookie for lead tracking
         setcookie('affiliate_id', $affiliate->id, time() + (30 * 24 * 60 * 60), '/');
         
+        // Decode discount from URL if present
+        $discount_percent = null;
+        $discount_code = $this->input->get('d');
+        if (!empty($discount_code)) {
+            $decoded = base64_decode($discount_code);
+            if ($decoded !== false && is_numeric($decoded)) {
+                $discount_percent = floatval($decoded);
+                // Validate discount is within range
+                $settings = $this->Settings_model->get_all();
+                $discount_min = isset($settings['discount_min']) ? floatval($settings['discount_min']) : 0;
+                $discount_max = isset($settings['discount_max']) ? floatval($settings['discount_max']) : 50;
+                if ($discount_percent < $discount_min || $discount_percent > $discount_max) {
+                    $discount_percent = null;
+                }
+            }
+        }
+        
         // Handle lead submission
         if ($this->input->post('submit_lead')) {
             $lead_data = [
@@ -47,7 +64,8 @@ class Affiliate extends CI_Controller {
                 'prefer_date' => $this->input->post('prefer_date'),
                 'detail' => $this->input->post('detail'),
                 'affiliate_id' => $affiliate->id,
-                'status' => 'pending'
+                'status' => 'pending',
+                'discount_percent' => $discount_percent // Save discount if present
             ];
             
             $lead_id = $this->Lead_model->create($lead_data);
@@ -63,7 +81,8 @@ class Affiliate extends CI_Controller {
         
         $data = [
             'affiliate' => $affiliate,
-            'stats' => $stats
+            'stats' => $stats,
+            'discount_percent' => $discount_percent
         ];
         
         $this->load->view('affiliate/landing', $data);
@@ -109,11 +128,12 @@ class Affiliate extends CI_Controller {
             // Handle profile picture upload
             if (!empty($_FILES['profile_picture']['name'])) {
                 // Create directory if not exists
-                if (!is_dir('./uploads/profile/')) {
-                    mkdir('./uploads/profile/', 0777, true);
+                $upload_path = FCPATH . 'uploads/profile/';
+                if (!is_dir($upload_path)) {
+                    mkdir($upload_path, 0755, true);
                 }
                 
-                $config['upload_path'] = './uploads/profile/';
+                $config['upload_path'] = $upload_path;
                 $config['allowed_types'] = 'gif|jpg|jpeg|png';
                 $config['max_size'] = 2048;
                 $config['encrypt_name'] = TRUE;
@@ -131,11 +151,12 @@ class Affiliate extends CI_Controller {
                 // Check if affiliate is special (allowed to change banner)
                 if ($affiliate->is_special == 1) {
                     // Create directory if not exists
-                    if (!is_dir('./uploads/cover/')) {
-                        mkdir('./uploads/cover/', 0777, true);
+                    $upload_path = FCPATH . 'uploads/cover/';
+                    if (!is_dir($upload_path)) {
+                        mkdir($upload_path, 0755, true);
                     }
                     
-                    $config['upload_path'] = './uploads/cover/';
+                    $config['upload_path'] = $upload_path;
                     $config['allowed_types'] = 'gif|jpg|jpeg|png';
                     $config['max_size'] = 3072; // 3MB for banner
                     $config['encrypt_name'] = TRUE;
@@ -206,13 +227,105 @@ class Affiliate extends CI_Controller {
         $affiliate_id = $this->session->userdata('affiliate_id');
         $affiliate = $this->Affiliate_model->get_by_id($affiliate_id);
         
+        // Get discount settings - check per-affiliate first, then global
+        $discount_min = null;
+        $discount_max = null;
+        
+        // Check if affiliate has individual limits set
+        if (isset($affiliate->discount_min) && $affiliate->discount_min !== null) {
+            $discount_min = floatval($affiliate->discount_min);
+        }
+        if (isset($affiliate->discount_max) && $affiliate->discount_max !== null) {
+            $discount_max = floatval($affiliate->discount_max);
+        }
+        
+        // If not set individually, use global settings
+        if ($discount_min === null || $discount_max === null) {
+            $settings = $this->Settings_model->get_all();
+            if ($discount_min === null) {
+                $discount_min = isset($settings['discount_min']) ? floatval($settings['discount_min']) : 0;
+            }
+            if ($discount_max === null) {
+                $discount_max = isset($settings['discount_max']) ? floatval($settings['discount_max']) : 50;
+            }
+        }
+        
         $profile_link = base_url($affiliate->slug);
         $signup_link = base_url('auth/signup?aff=' . $affiliate_id);
         
         $data = [
             'affiliate' => $affiliate,
             'profile_link' => $profile_link,
-            'signup_link' => $signup_link
+            'signup_link' => $signup_link,
+            'discount_min' => $discount_min,
+            'discount_max' => $discount_max
+        ];
+        
+        $this->load->view('affiliate/links', $data);
+    }
+
+    // Generate Discount Link
+    public function generate_discount_link() {
+        $affiliate_id = $this->session->userdata('affiliate_id');
+        $affiliate = $this->Affiliate_model->get_by_id($affiliate_id);
+        
+        // Get discount settings - check per-affiliate first, then global
+        $discount_min = null;
+        $discount_max = null;
+        
+        // Check if affiliate has individual limits set
+        if (isset($affiliate->discount_min) && $affiliate->discount_min !== null) {
+            $discount_min = floatval($affiliate->discount_min);
+        }
+        if (isset($affiliate->discount_max) && $affiliate->discount_max !== null) {
+            $discount_max = floatval($affiliate->discount_max);
+        }
+        
+        // If not set individually, use global settings
+        if ($discount_min === null || $discount_max === null) {
+            $settings = $this->Settings_model->get_all();
+            if ($discount_min === null) {
+                $discount_min = isset($settings['discount_min']) ? floatval($settings['discount_min']) : 0;
+            }
+            if ($discount_max === null) {
+                $discount_max = isset($settings['discount_max']) ? floatval($settings['discount_max']) : 50;
+            }
+        }
+        
+        $discount_percent = $this->input->post('discount_percent');
+        
+        // Validate discount
+        if (empty($discount_percent) || !is_numeric($discount_percent)) {
+            $this->session->set_flashdata('error', 'Please enter a valid discount percentage');
+            redirect('affiliate/links');
+            return;
+        }
+        
+        $discount_percent = floatval($discount_percent);
+        
+        if ($discount_percent < $discount_min || $discount_percent > $discount_max) {
+            $this->session->set_flashdata('error', 'Discount must be between ' . $discount_min . '% and ' . $discount_max . '%');
+            redirect('affiliate/links');
+            return;
+        }
+        
+        // Encode discount in base64
+        $discount_encoded = base64_encode((string)$discount_percent);
+        
+        // Generate link with discount parameter
+        $discount_link = base_url($affiliate->slug) . '?d=' . urlencode($discount_encoded);
+        
+        $profile_link = base_url($affiliate->slug);
+        $signup_link = base_url('auth/signup?aff=' . $affiliate_id);
+        
+        $data = [
+            'affiliate' => $affiliate,
+            'profile_link' => $profile_link,
+            'signup_link' => $signup_link,
+            'discount_min' => $discount_min,
+            'discount_max' => $discount_max,
+            'generated_discount_link' => $discount_link,
+            'discount_percent' => $discount_percent
         ];
         
         $this->load->view('affiliate/links', $data);

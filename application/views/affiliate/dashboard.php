@@ -45,28 +45,28 @@
             
             <!-- Stats Cards -->
             <div class="row mb-4">
-                <div class="col-md-3">
+                <div class="col-md-3 col-6 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-mouse-pointer fa-2x text-primary mb-2"></i>
                         <h3><?php echo $stats['clicks']; ?></h3>
                         <p>Total Clicks</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-6 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-users fa-2x text-info mb-2"></i>
                         <h3><?php echo $stats['total_leads']; ?></h3>
                         <p>Total Leads</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-6 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-clock fa-2x text-warning mb-2"></i>
                         <h3><?php echo $stats['pending_leads']; ?></h3>
                         <p>Pending Leads</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-6 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
                         <h3><?php echo $stats['confirmed_leads']; ?></h3>
@@ -76,14 +76,14 @@
             </div>
             
             <div class="row mb-4">
-                <div class="col-md-6">
+                <div class="col-md-6 col-12 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
                         <h3>$<?php echo number_format($stats['total_commission'], 2); ?></h3>
                         <p>Total Commission</p>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-12 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-user-friends fa-2x text-primary mb-2"></i>
                         <h3><?php echo $stats['level1_referrals']; ?></h3>
@@ -98,7 +98,7 @@
                     <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Weekly Performance</h5>
                 </div>
                 <div class="card-body">
-                    <div id="performanceChart" style="height: 400px;"></div>
+                    <div id="performanceChart" style="height: 400px; min-height: 300px;"></div>
                 </div>
             </div>
             
@@ -185,6 +185,21 @@
   window.addEventListener('resize', function() {
     drawChart();
   });
+  
+  // Adjust chart height for mobile
+  function adjustChartHeight() {
+    var chartDiv = document.getElementById('performanceChart');
+    if (window.innerWidth <= 767.98) {
+      chartDiv.style.height = '300px';
+    } else {
+      chartDiv.style.height = '400px';
+    }
+    drawChart();
+  }
+  
+  // Call on load and resize
+  adjustChartHeight();
+  window.addEventListener('resize', adjustChartHeight);
 </script>
 
 <?php $this->load->view('layouts/footer'); ?>

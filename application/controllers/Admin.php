@@ -78,6 +78,27 @@ class Admin extends CI_Controller {
                 'is_special' => $this->input->post('is_special') ? 1 : 0
             ];
             
+            // Handle discount limits (can be empty to use global settings)
+            $discount_min = $this->input->post('discount_min');
+            $discount_max = $this->input->post('discount_max');
+            
+            // Only update if fields are present in form (even if empty)
+            if ($discount_min !== false) {
+                if ($discount_min !== '' && $discount_min !== null) {
+                    $update_data['discount_min'] = floatval($discount_min);
+                } else {
+                    $update_data['discount_min'] = null; // Use global setting
+                }
+            }
+            
+            if ($discount_max !== false) {
+                if ($discount_max !== '' && $discount_max !== null) {
+                    $update_data['discount_max'] = floatval($discount_max);
+                } else {
+                    $update_data['discount_max'] = null; // Use global setting
+                }
+            }
+            
             // Update slug if provided
             $new_slug = trim($this->input->post('slug'));
             if (!empty($new_slug)) {
@@ -102,11 +123,12 @@ class Admin extends CI_Controller {
             
             // Handle profile picture upload
             if (!empty($_FILES['profile_picture']['name'])) {
-                if (!is_dir('./uploads/profile/')) {
-                    mkdir('./uploads/profile/', 0777, true);
+                $upload_path = FCPATH . 'uploads/profile/';
+                if (!is_dir($upload_path)) {
+                    mkdir($upload_path, 0755, true);
                 }
                 
-                $config['upload_path'] = './uploads/profile/';
+                $config['upload_path'] = $upload_path;
                 $config['allowed_types'] = 'gif|jpg|jpeg|png';
                 $config['max_size'] = 2048;
                 $config['encrypt_name'] = TRUE;
@@ -123,11 +145,12 @@ class Admin extends CI_Controller {
             
             // Handle cover/banner image upload
             if (!empty($_FILES['cover_image']['name'])) {
-                if (!is_dir('./uploads/cover/')) {
-                    mkdir('./uploads/cover/', 0777, true);
+                $upload_path = FCPATH . 'uploads/cover/';
+                if (!is_dir($upload_path)) {
+                    mkdir($upload_path, 0755, true);
                 }
                 
-                $config['upload_path'] = './uploads/cover/';
+                $config['upload_path'] = $upload_path;
                 $config['allowed_types'] = 'gif|jpg|jpeg|png';
                 $config['max_size'] = 3072; // 3MB for banner
                 $config['encrypt_name'] = TRUE;
@@ -146,7 +169,8 @@ class Admin extends CI_Controller {
             $new_password = $this->input->post('password');
             if (!empty($new_password)) {
                 if (strlen($new_password) >= 6) {
-                    $update_data['password'] = md5($new_password);
+                    // Pass plain password - model will hash it
+                    $update_data['password'] = $new_password;
                 } else {
                     $this->session->set_flashdata('error', 'Password must be at least 6 characters long.');
                     redirect('admin/affiliate_detail/' . $id);
@@ -154,10 +178,15 @@ class Admin extends CI_Controller {
                 }
             }
             
-            // Remove empty values to avoid issues
-            $update_data = array_filter($update_data, function($value) {
-                return $value !== '' && $value !== null;
-            });
+            // Remove empty string values but keep null values (for discount limits)
+            $update_data = array_filter($update_data, function($value, $key) {
+                // Keep null values (for discount limits to reset to global)
+                if ($value === null) {
+                    return true;
+                }
+                // Remove empty strings
+                return $value !== '';
+            }, ARRAY_FILTER_USE_BOTH);
             
             // Always include is_special (default 0 if not set)
             if (!isset($update_data['is_special'])) {

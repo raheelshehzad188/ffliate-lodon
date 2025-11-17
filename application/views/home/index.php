@@ -1176,7 +1176,7 @@
                 <li><a href="#">Affiliate Program</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
-            <a href="#" class="header-btn">Affiliate Login →</a>
+            <a href="<?php echo base_url('auth/login'); ?>" class="header-btn">Affiliate Login →</a>
         </nav>
     </header>
 
@@ -1187,7 +1187,7 @@
             <h1><?php echo isset($settings['hero_title']) ? htmlspecialchars($settings['hero_title']) : 'We Provide Best Affiliate Program For You'; ?></h1>
             <p><?php echo isset($settings['hero_subtitle']) ? htmlspecialchars($settings['hero_subtitle']) : 'Join London Aesthetics UK Affiliate Program and start earning commissions by promoting our premium skincare and aesthetics services. Build your network and grow your income.'; ?></p>
             <div class="hero-buttons">
-                <button class="btn-primary">Sign Up</button>
+                <a href="<?php echo base_url('auth/signup'); ?>" class="btn-primary" style="text-decoration: none; display: inline-block;">Sign Up</a>
                 <button class="btn-secondary">Watch Video</button>
             </div>
         </div>
@@ -1242,7 +1242,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn-primary">Sign Up</button>
+                <a href="<?php echo base_url('auth/signup'); ?>" class="btn-primary" style="text-decoration: none; display: inline-block;">Sign Up</a>
             </div>
             <div class="about-images">
                 <div class="about-image">
@@ -1363,7 +1363,7 @@
                 <p>Earn up to 22% direct commissions, plus bonuses from your growing affiliate team!</p>
             </div>
         </div>
-        <button class="btn-signup">Sign Up Now</button>
+        <a href="<?php echo base_url('auth/signup'); ?>" class="btn-signup" style="text-decoration: none; display: inline-block;">Sign Up Now</a>
     </div>
 
     <!-- Procedure Steps -->

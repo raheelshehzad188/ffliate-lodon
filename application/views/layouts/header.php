@@ -89,6 +89,55 @@ if (!isset($settings)) {
             background: rgba(255,255,255,0.1);
             color: white;
         }
+        /* Mobile Responsive */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                display: none !important;
+            }
+            .col-md-9 {
+                width: 100% !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+            .col-md-3 {
+                width: 100% !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+            .stat-card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            .stat-card h3 {
+                font-size: 1.8rem;
+            }
+            .stat-card i {
+                font-size: 1.5rem !important;
+            }
+            .container-fluid {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            .table th,
+            .table td {
+                padding: 8px 4px;
+            }
+            .card-body {
+                padding: 15px;
+            }
+            .card-header h5 {
+                font-size: 1rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .navbar-nav .nav-link {
+                padding: 10px 15px;
+            }
+        }
         .stat-card {
             background: white;
             border-radius: 10px;
@@ -140,17 +189,39 @@ if (!isset($settings)) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <?php if ($this->session->userdata('affiliate_id')): ?>
-                        <li class="nav-item">
+                        <!-- Mobile Menu Items (show on mobile, hide on desktop where sidebar is visible) -->
+                        <li class="nav-item d-md-none">
                             <a class="nav-link" href="<?php echo base_url('affiliate/dashboard'); ?>">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                                <i class="fas fa-home"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" href="<?php echo base_url('affiliate/commissions'); ?>">
+                                <i class="fas fa-dollar-sign"></i> Commissions
+                            </a>
+                        </li>
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" href="<?php echo base_url('affiliate/links'); ?>">
+                                <i class="fas fa-link"></i> Affiliate Links
+                            </a>
+                        </li>
+                        <li class="nav-item d-md-none">
                             <a class="nav-link" href="<?php echo base_url('affiliate/profile'); ?>">
                                 <i class="fas fa-user"></i> Profile
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" href="<?php echo base_url('affiliate/change_password'); ?>">
+                                <i class="fas fa-key"></i> Change Password
+                            </a>
+                        </li>
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" href="<?php echo base_url('auth/logout'); ?>">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                        <!-- Desktop: Only show Logout in top menu (sidebar has other items) -->
+                        <li class="nav-item d-none d-md-block">
                             <a class="nav-link" href="<?php echo base_url('auth/logout'); ?>">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>

@@ -77,6 +77,7 @@
                                     <th>Phone</th>
                                     <th>Location</th>
                                     <th>Affiliate</th>
+                                    <th>Discount %</th>
                                     <th>Status</th>
                                     <th>Date</th>
                                     <th>Action</th>
@@ -103,6 +104,15 @@
                                                 ?>
                                             </td>
                                             <td>
+                                                <?php if (isset($lead->discount_percent) && $lead->discount_percent !== null): ?>
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-tag"></i> <?php echo number_format($lead->discount_percent, 1); ?>%
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
                                                 <?php if ($lead->status == 'confirmed'): ?>
                                                     <span class="badge bg-success">Confirmed</span>
                                                 <?php else: ?>
@@ -121,7 +131,7 @@
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted">No leads found</td>
+                                        <td colspan="9" class="text-center text-muted">No leads found</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

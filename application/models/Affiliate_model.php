@@ -91,15 +91,30 @@ class Affiliate_model extends CI_Model {
 
     // Update affiliate
     public function update($id, $data) {
-        if (isset($data['password'])) {
-            $data['password'] = md5($data['password']);
+        // Hash password if provided (only if it's not already hashed - md5 is 32 hex chars)
+        if (isset($data['password']) && !empty($data['password'])) {
+            // Only hash if it's not already a 32-character MD5 hash
+            if (strlen($data['password']) !== 32 || !ctype_xdigit($data['password'])) {
+                $data['password'] = md5($data['password']);
+            }
         }
         $data['updated_at'] = date('Y-m-d H:i:s');
         
         // Remove any null or empty string values that might cause issues
-        $data = array_filter($data, function($value) {
+        // But always keep password field if it's set (even if empty, though that shouldn't happen)
+        $password_value = isset($data['password']) ? $data['password'] : null;
+        $data = array_filter($data, function($value, $key) {
+            // Always keep password field if it exists
+            if ($key === 'password') {
+                return true;
+            }
             return $value !== null && $value !== '';
-        });
+        }, ARRAY_FILTER_USE_BOTH);
+        
+        // Restore password if it was set (to ensure it's not filtered out)
+        if ($password_value !== null) {
+            $data['password'] = $password_value;
+        }
         
         if (empty($data)) {
             return false;

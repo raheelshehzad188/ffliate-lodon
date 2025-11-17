@@ -50,7 +50,7 @@ class Commission_model extends CI_Model {
                 'commission_amount' => $commission_amount,
                 'commission_percent' => $level_data['percent'],
                 'level' => $level_data['level'],
-                'status' => $commission_status,
+                'status' => 'pending',
                 'created_at' => date('Y-m-d H:i:s')
             ]);
             

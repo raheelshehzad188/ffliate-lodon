@@ -57,6 +57,10 @@ INSERT INTO `settings` (`setting_key`, `setting_value`, `category`, `description
 
 -- Commission Settings
 ('commission_rate', '22', 'commission', 'Default Commission Rate (%)', NOW(), NOW()),
-('min_payout', '50', 'commission', 'Minimum Payout Amount', NOW(), NOW())
+('min_payout', '50', 'commission', 'Minimum Payout Amount', NOW(), NOW()),
+
+-- Discount Settings
+('discount_min', '0', 'commission', 'Minimum Discount Percentage', NOW(), NOW()),
+('discount_max', '50', 'commission', 'Maximum Discount Percentage', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`), `updated_at` = NOW();
 

@@ -31,24 +31,24 @@
                 <div class="card-body">
                     <form method="POST" action="<?php echo base_url('affiliate/profile'); ?>" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 col-12 mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($affiliate->full_name); ?>" required>
                             </div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 col-12 mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" class="form-control" value="<?php echo htmlspecialchars($affiliate->username); ?>" disabled>
                             </div>
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 col-12 mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" value="<?php echo htmlspecialchars($affiliate->email); ?>" disabled>
                             </div>
                             
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 col-12 mb-3">
                                 <label class="form-label">Website</label>
                                 <input type="url" name="website" class="form-control" value="<?php echo htmlspecialchars($affiliate->website); ?>">
                             </div>
