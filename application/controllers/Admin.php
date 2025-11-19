@@ -39,18 +39,42 @@ class Admin extends CI_Controller {
 
     // Affiliates List
     public function affiliates() {
-        $filters = [
-            'status' => $this->input->get('status'),
-            'search' => $this->input->get('search'),
-            'from_date' => $this->input->get('from_date') ?: date('Y-m-01'),
-            'to_date' => $this->input->get('to_date') ?: date('Y-m-t')
-        ];
+        // Get filters and clean empty values
+        $filters = [];
+        
+        $status = $this->input->get('status');
+        if (!empty($status)) {
+            $filters['status'] = $status;
+        }
+        
+        $search = $this->input->get('search');
+        if (!empty($search)) {
+            $filters['search'] = $search;
+        }
+        
+        $from_date = $this->input->get('from_date');
+        if (!empty($from_date)) {
+            $filters['from_date'] = $from_date;
+        }
+        
+        $to_date = $this->input->get('to_date');
+        if (!empty($to_date)) {
+            $filters['to_date'] = $to_date;
+        }
         
         $affiliates = $this->Affiliate_model->get_all($filters);
         
+        // Prepare filters for view (with all keys for form)
+        $view_filters = [
+            'status' => $status ?: '',
+            'search' => $search ?: '',
+            'from_date' => $from_date ?: date('Y-m-01'),
+            'to_date' => $to_date ?: date('Y-m-t')
+        ];
+        
         $data = [
             'affiliates' => $affiliates,
-            'filters' => $filters
+            'filters' => $view_filters
         ];
         
         $this->load->view('admin/affiliates', $data);

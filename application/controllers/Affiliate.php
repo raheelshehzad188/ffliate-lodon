@@ -10,7 +10,7 @@ class Affiliate extends CI_Controller {
         
         // Don't check auth for landing page
         $method = $this->uri->segment(2);
-        if ($method !== 'landing') {
+        if ($method && $method !== 'landing') {
             if (!$this->session->userdata('affiliate_id')) {
                 redirect('auth/login');
             }

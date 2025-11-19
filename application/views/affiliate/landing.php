@@ -51,7 +51,46 @@
     margin: 10px;
     font-size: 0.9rem;
 }
+.discount-banner {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+}
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.discount-banner h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.discount-banner p {
+    margin: 5px 0 0;
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
 </style>
+
+<?php if (isset($discount_percent) && $discount_percent !== null): ?>
+<div class="discount-banner">
+    <div class="container">
+        <h2><i class="fas fa-tag"></i> Special Discount Offer!</h2>
+        <p>You're getting <strong><?php echo number_format($discount_percent, 1); ?>% OFF</strong> - Limited Time Offer!</p>
+    </div>
+</div>
+<?php endif; ?>
 
 <div class="landing-hero" style="<?php echo $affiliate->cover_image ? 'background-image: url(' . base_url($affiliate->cover_image) . '); background-size: cover; background-position: center;' : ''; ?>">
     <div class="container" style="position: relative; z-index: 1;">
@@ -59,7 +98,7 @@
         <p class="lead">Get in touch with us through <?php echo htmlspecialchars($affiliate->full_name); ?></p>
     </div>
     <?php if ($affiliate->cover_image): ?>
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(92, 22, 61, 0.7);"></div>
+        
     <?php endif; ?>
 </div>
 
@@ -77,12 +116,6 @@
         
         <?php if ($affiliate->bio): ?>
             <p class="affiliate-bio"><?php echo nl2br(htmlspecialchars($affiliate->bio)); ?></p>
-        <?php endif; ?>
-        
-        <?php if (isset($discount_percent) && $discount_percent !== null): ?>
-        <div class="alert alert-success" style="max-width: 500px; margin: 20px auto; font-size: 1.2rem; text-align: center;">
-            <i class="fas fa-tag"></i> <strong>Special Offer: <?php echo number_format($discount_percent, 1); ?>% Discount!</strong>
-        </div>
         <?php endif; ?>
         
         <div>

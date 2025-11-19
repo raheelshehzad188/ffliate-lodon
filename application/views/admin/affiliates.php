@@ -50,7 +50,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" name="search" class="form-control" placeholder="Search by name or email" value="<?php echo $filters['search']; ?>">
+                            <input type="text" name="search" class="form-control" placeholder="Search in all fields" value="<?php echo htmlspecialchars($filters['search']); ?>">
                         </div>
                         <div class="col-md-2">
                             <input type="date" name="from_date" class="form-control" value="<?php echo $filters['from_date']; ?>">

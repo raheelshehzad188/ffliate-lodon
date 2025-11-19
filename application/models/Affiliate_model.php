@@ -148,20 +148,32 @@ class Affiliate_model extends CI_Model {
 
     // Get all affiliates with filters
     public function get_all($filters = []) {
-        if (isset($filters['status'])) {
+        // Filter by status (only if not empty)
+        if (isset($filters['status']) && !empty($filters['status'])) {
             $this->db->where('status', $filters['status']);
         }
-        if (isset($filters['search'])) {
+        
+        // Search across all relevant columns
+        if (isset($filters['search']) && !empty($filters['search'])) {
+            $search_term = $filters['search'];
             $this->db->group_start();
-            $this->db->like('full_name', $filters['search']);
-            $this->db->or_like('email', $filters['search']);
-            $this->db->or_like('username', $filters['search']);
+            $this->db->like('full_name', $search_term);
+            $this->db->or_like('email', $search_term);
+            $this->db->or_like('username', $search_term);
+            $this->db->or_like('website', $search_term);
+            $this->db->or_like('slug', $search_term);
+            $this->db->or_like('bio', $search_term);
+            $this->db->or_like('promote_method', $search_term);
             $this->db->group_end();
         }
-        if (isset($filters['from_date']) && isset($filters['to_date'])) {
+        
+        // Date range filter (only if both dates are provided)
+        if (isset($filters['from_date']) && !empty($filters['from_date']) && 
+            isset($filters['to_date']) && !empty($filters['to_date'])) {
             $this->db->where('created_at >=', $filters['from_date'] . ' 00:00:00');
             $this->db->where('created_at <=', $filters['to_date'] . ' 23:59:59');
         }
+        
         return $this->db->order_by('created_at', 'DESC')->get('affiliates')->result();
     }
 
