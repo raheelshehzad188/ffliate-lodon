@@ -33,10 +33,10 @@ if ($is_localhost) {
 	$config['base_url'] = 'http://localhost/affliate/';
 } elseif ($is_local_network) {
 	// Local network (192.168.x.x) base URL
-	$config['base_url'] = 'http://192.168.1.10/affliate/';
+	$config['base_url'] = 'http://'.$server_ip.'/affliate/';
 } else {
 	// Live/Production base URL
-	$config['base_url'] = 'https://peachpuff-armadillo-851546.hostingersite.com/affliate/';
+	$config['base_url'] = 'https://peachpuff-armadillo-851546.hostingersite.com/';
 }
 
 /*

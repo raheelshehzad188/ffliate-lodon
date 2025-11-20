@@ -20,7 +20,6 @@ class Admin extends CI_Controller {
 
     // Dashboard
     public function dashboard() {
-        $this->Commission_model->process_commissions_by_lead(2, 500);
         $from_date = $this->input->get('from') ?: date('Y-m-01');
         $to_date = $this->input->get('to') ?: date('Y-m-t');
         
@@ -306,7 +305,7 @@ class Admin extends CI_Controller {
                 $this->Commission_model->process_commissions_by_lead($id, $sale_amount);
                 
                 // Also update any existing commissions for this lead to 'confirmed'
-                $this->Commission_model->update_status_by_lead($id, 'confirmed');
+                $this->Commission_model->update_status_by_lead($id, 'pending');
                 
                 $this->session->set_flashdata('success', 'Lead confirmed and commissions processed');
             } else {

@@ -72,10 +72,15 @@ $route['affiliate'] = 'affiliate/dashboard';
 $route['contact'] = 'lead/capture';
 $route['lead-form'] = 'lead/capture';
 
+// User OTP Routes
+$route['user/otp/send'] = 'user/otp_send';
+$route['user/otp/verify'] = 'user/otp_verify';
+
 // Reserved routes (must be before catch-all)
 $route['admin/(:any)'] = 'admin/$1';
 $route['auth/(:any)'] = 'auth/$1';
 $route['lead/(:any)'] = 'lead/$1';
+$route['user/(:any)'] = 'user/$1';
 
 // Affiliate Landing Page Route (must be last - catch-all)
 $route['(:any)'] = 'affiliate/landing/$1';

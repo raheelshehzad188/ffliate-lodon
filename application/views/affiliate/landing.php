@@ -120,9 +120,6 @@
         
         <div>
             <span class="stats-badge">
-                <i class="fas fa-check-circle"></i> <?php echo $stats['confirmed_leads']; ?> Confirmed Leads
-            </span>
-            <span class="stats-badge">
                 <i class="fas fa-star"></i> Trusted Affiliate
             </span>
         </div>
@@ -171,8 +168,6 @@
                     <option value="">Select Location</option>
                     <option value="Lahore">Lahore</option>
                     <option value="Islamabad">Islamabad</option>
-                    <option value="Karachi">Karachi</option>
-                    <option value="Other">Other</option>
                 </select>
             </div>
             
