@@ -15,6 +15,17 @@ class Auth extends CI_Controller {
             redirect('affiliate/dashboard');
         }
 
+        // Set cookie when user first visits with aff parameter
+        $ref_id = $this->input->get('aff');
+        if ($ref_id && !$this->input->cookie('affiliate_id')) {
+            // Verify that referral affiliate exists and is active
+            $referrer = $this->Affiliate_model->get_by_id($ref_id);
+            if ($referrer && $referrer->status === 'active') {
+                // Set cookie for tracking
+                setcookie('affiliate_id', $ref_id, time() + (30 * 24 * 60 * 60), '/');
+            }
+        }
+
         $this->load->library('form_validation');
         
         if ($this->input->post()) {
@@ -34,8 +45,11 @@ class Auth extends CI_Controller {
                     'status' => 'pending'
                 ];
 
-                // Check if referred by (from URL parameter or cookie)
-                $ref_id = $this->input->get('aff'); // URL parameter: ?aff=123
+                // Check if referred by (from POST parameter, URL parameter, or cookie)
+                $ref_id = $this->input->post('aff'); // From hidden form field
+                if (!$ref_id) {
+                    $ref_id = $this->input->get('aff'); // URL parameter: ?aff=123
+                }
                 if (!$ref_id) {
                     $ref_id = $this->input->cookie('affiliate_id'); // Cookie
                 }

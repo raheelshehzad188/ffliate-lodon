@@ -9,6 +9,9 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" action="<?php echo base_url('auth/signup'); ?>">
+                        <?php if ($this->input->get('aff')): ?>
+                            <input type="hidden" name="aff" value="<?php echo htmlspecialchars($this->input->get('aff')); ?>">
+                        <?php endif; ?>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Full Name <span class="text-danger">*</span></label>
