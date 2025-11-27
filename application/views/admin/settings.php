@@ -154,10 +154,26 @@
                                                value="<?php echo isset($settings['site_phone']) ? htmlspecialchars($settings['site_phone']) : ''; ?>">
                                     </div>
                                 </div>
-                                <button type="submit" name="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save General Settings
-                                </button>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" name="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Save General Settings
+                                    </button>
+                                </div>
                             </form>
+                            
+                            <hr class="my-4">
+                            
+                            <!-- Refresh Data Section -->
+                            <div class="alert alert-warning">
+                                <h6><i class="fas fa-exclamation-triangle"></i> Refresh Data</h6>
+                                <p class="mb-2">This will delete all leads and commissions data. <strong>Users and Settings will be preserved.</strong></p>
+                                <p class="mb-3 text-danger"><strong>⚠️ Warning: This action cannot be undone!</strong></p>
+                                <form method="POST" action="<?php echo base_url('admin/refresh_data'); ?>" onsubmit="return confirm('Are you sure you want to delete all leads and commissions? This action cannot be undone!');">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-sync-alt"></i> Refresh Data (Delete Leads & Commissions)
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -343,6 +359,25 @@
                         </div>
                         <div class="card-body">
                             <form method="POST" action="<?php echo base_url('admin/settings?tab=commission'); ?>">
+                                <h6 class="mb-3"><i class="fas fa-dollar-sign"></i> Currency Settings</h6>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Currency Symbol</label>
+                                        <input type="text" name="currency_symbol" class="form-control" 
+                                               value="<?php echo isset($settings['currency_symbol']) ? htmlspecialchars($settings['currency_symbol']) : '$'; ?>" 
+                                               maxlength="5" placeholder="$">
+                                        <small class="form-text text-muted">Currency symbol (e.g., $, £, €, ₹)</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Currency Code</label>
+                                        <input type="text" name="currency_code" class="form-control" 
+                                               value="<?php echo isset($settings['currency_code']) ? htmlspecialchars($settings['currency_code']) : 'USD'; ?>" 
+                                               maxlength="3" placeholder="USD">
+                                        <small class="form-text text-muted">ISO currency code (e.g., USD, GBP, EUR, INR)</small>
+                                    </div>
+                                </div>
+                                <hr class="my-4">
+                                <h6 class="mb-3"><i class="fas fa-percent"></i> Commission Settings</h6>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Default Commission Rate (%)</label>

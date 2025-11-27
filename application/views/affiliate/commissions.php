@@ -42,8 +42,8 @@
                                     <?php foreach ($commissions as $commission): ?>
                                         <tr>
                                             <td>#<?php echo $commission->lead_id; ?></td>
-                                            <td>$<?php echo number_format($commission->total_sale, 2); ?></td>
-                                            <td class="text-success"><strong>$<?php echo number_format($commission->commission_amount, 2); ?></strong></td>
+                                            <td><?php echo format_currency($commission->total_sale); ?></td>
+                                            <td class="text-success"><strong><?php echo format_currency($commission->commission_amount); ?></strong></td>
                                             <td><?php echo $commission->commission_percent; ?>%</td>
                                             <td><span class="badge bg-info">Level <?php echo $commission->level; ?></span></td>
                                             <td>

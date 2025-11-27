@@ -48,7 +48,7 @@ class Auth extends CI_Controller {
                 // Check if referred by (from POST parameter, URL parameter, or cookie)
                 $ref_id = $this->input->post('aff'); // From hidden form field
                 if (!$ref_id) {
-                    $ref_id = $this->input->get('aff'); // URL parameter: ?aff=123
+                $ref_id = $this->input->get('aff'); // URL parameter: ?aff=123
                 }
                 if (!$ref_id) {
                     $ref_id = $this->input->cookie('affiliate_id'); // Cookie

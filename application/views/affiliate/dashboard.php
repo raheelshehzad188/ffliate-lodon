@@ -79,7 +79,7 @@
                 <div class="col-md-6 col-12 mb-3">
                     <div class="stat-card">
                         <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
-                        <h3>$<?php echo number_format($stats['total_commission'], 2); ?></h3>
+                        <h3><?php echo format_currency($stats['total_commission']); ?></h3>
                         <p>Total Commission</p>
                     </div>
                 </div>
@@ -124,8 +124,8 @@
                                     <?php foreach ($commissions as $commission): ?>
                                         <tr>
                                             <td>#<?php echo $commission->lead_id; ?></td>
-                                            <td>$<?php echo number_format($commission->total_sale, 2); ?></td>
-                                            <td class="text-success"><strong>$<?php echo number_format($commission->commission_amount, 2); ?></strong></td>
+                                            <td><?php echo format_currency($commission->total_sale); ?></td>
+                                            <td class="text-success"><strong><?php echo format_currency($commission->commission_amount); ?></strong></td>
                                             <td><span class="badge bg-info">Level <?php echo $commission->level; ?></span></td>
                                             <td><?php echo date('M d, Y', strtotime($commission->created_at)); ?></td>
                                         </tr>

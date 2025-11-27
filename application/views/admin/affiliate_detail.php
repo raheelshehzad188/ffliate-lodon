@@ -176,7 +176,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card">
-                                <h3>$<?php echo number_format($stats['total_commission'], 2); ?></h3>
+                                <h3><?php echo format_currency($stats['total_commission']); ?></h3>
                                 <p>Commission</p>
                             </div>
                         </div>

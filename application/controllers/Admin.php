@@ -119,7 +119,7 @@ class Admin extends CI_Controller {
                     ['status' => $old_status],
                     ['status' => $status]
                 );
-                $this->session->set_flashdata('success', 'Affiliate status updated');
+            $this->session->set_flashdata('success', 'Affiliate status updated');
             }
         }
         redirect('admin/affiliates');
@@ -368,9 +368,11 @@ class Admin extends CI_Controller {
                 $this->Commission_model->update_status_by_lead($id, 'pending');
                 
                 // Log the lead confirmation
+                $this->load->helper('currency');
+                $currency_symbol = get_currency_symbol();
                 $this->log_activity(
                     'lead_confirmed',
-                    "Lead #{$id} ({$old_lead->name}) confirmed with sale amount: $" . number_format($sale_amount, 2),
+                    "Lead #{$id} ({$old_lead->name}) confirmed with sale amount: " . $currency_symbol . number_format($sale_amount, 2),
                     'lead',
                     $id,
                     ['status' => $old_lead->status, 'sale_amount' => $old_lead->sale_amount],
@@ -506,6 +508,68 @@ class Admin extends CI_Controller {
         ];
         
         $this->load->view('admin/settings', $data);
+    }
+
+    // Refresh Data - Truncate Leads and Commissions
+    public function refresh_data() {
+        // Check if user is super admin
+        $admin_id = $this->session->userdata('admin_id');
+        if (!$this->Admin_model->is_super_admin($admin_id)) {
+            $this->session->set_flashdata('error', 'Access denied. Only super admin can refresh data.');
+            redirect('admin/settings');
+            return;
+        }
+
+        try {
+            // Disable foreign key checks temporarily
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+            
+            // Truncate leads table
+            if ($this->db->table_exists('leads')) {
+                $this->db->truncate('leads');
+                $leads_deleted = true;
+            } else {
+                $leads_deleted = false;
+            }
+            
+            // Truncate commissions table
+            if ($this->db->table_exists('commissions')) {
+                $this->db->truncate('commissions');
+                $commissions_deleted = true;
+            } else {
+                $commissions_deleted = false;
+            }
+            
+            // Truncate affiliate_clicks table (optional - for complete refresh)
+            if ($this->db->table_exists('affiliate_clicks')) {
+                $this->db->truncate('affiliate_clicks');
+            }
+            
+            // Truncate activity_logs table (optional - for complete refresh)
+            if ($this->db->table_exists('activity_logs')) {
+                $this->db->truncate('activity_logs');
+            }
+            
+            // Re-enable foreign key checks
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+            
+            // Log the action
+            $this->log_activity(
+                'data_refresh',
+                "All leads and commissions data deleted (refresh)",
+                null,
+                null,
+                null,
+                ['leads_deleted' => $leads_deleted, 'commissions_deleted' => $commissions_deleted]
+            );
+            
+            $this->session->set_flashdata('success', 'Data refreshed successfully! All leads and commissions have been deleted. Users and settings are preserved.');
+        } catch (Exception $e) {
+            $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+            $this->session->set_flashdata('error', 'Error refreshing data: ' . $e->getMessage());
+        }
+        
+        redirect('admin/settings?tab=general');
     }
 
     // Sub-Admin Management (Only for super_admin)
